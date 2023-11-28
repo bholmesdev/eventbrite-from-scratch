@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
 import preact from "@astrojs/preact";
 import cloudflare from "@astrojs/cloudflare";
@@ -7,5 +7,7 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   integrations: [preact()],
   output: "server",
-  adapter: cloudflare()
+  adapter: cloudflare({
+    runtime: { mode: "local" },
+  }),
 });

@@ -17,12 +17,23 @@ dependencies:
   astro:
     specifier: ^3.6.0
     version: 3.6.0(typescript@5.3.2)
+  open-props:
+    specifier: ^1.6.13
+    version: 1.6.13
   preact:
     specifier: ^10.6.5
     version: 10.19.2
+  simple-stack-form:
+    specifier: ^0.0.1
+    version: 0.0.1(astro@3.6.0)
   typescript:
     specifier: ^5.3.2
     version: 5.3.2
+
+devDependencies:
+  '@cloudflare/workers-types':
+    specifier: ^4.20231121.0
+    version: 4.20231121.0
 
 packages:
 
@@ -474,7 +485,6 @@ packages:
 
   /@cloudflare/workers-types@4.20231121.0:
     resolution: {integrity: sha512-+kWfpCkqiepwAKXyHoE0gnkPgkLhz0/9HOBIGhHRsUvUKvhUtm3mbqqoGRWgF1qcjzrDUBbrrOq4MYHfFtc2RA==}
-    dev: false
 
   /@emmetio/abbreviation@2.3.3:
     resolution: {integrity: sha512-mgv58UrU3rh4YgbE/TzgLQwJ3pFsHHhCLqY20aJq+9comytTXUDNGG/SMtSeMJdkpxgXSXunBGLD8Boka3JyVA==}
@@ -3079,6 +3089,10 @@ packages:
       mimic-fn: 4.0.0
     dev: false
 
+  /open-props@1.6.13:
+    resolution: {integrity: sha512-2RnJCI3tBHpj1FHSw+jTF1BjdfnpV99IMzZB00srkEX5wy33sR6zdcE0xFVE61VKrgd6QIW6w90NAaR2lIKhqQ==}
+    dev: false
+
   /ora@7.0.1:
     resolution: {integrity: sha512-0TUxTiFJWv+JnjWm4o9yvuskpEJLXTcng8MJuKd+SzAzp2o+OP3HWqNhB4OdJRt1Vsd9/mR0oyaEYlOnL7XIRw==}
     engines: {node: '>=16'}
@@ -3615,6 +3629,14 @@ packages:
       simple-concat: 1.0.1
     dev: false
     optional: true
+
+  /simple-stack-form@0.0.1(astro@3.6.0):
+    resolution: {integrity: sha512-F23vNocZmrlvQ2e83vo4is7E13kPYWM1exG/VDkJdzTsQq3qdZcqb0jRD1gcjhRiHAXuiE27VG8caXRYmgnw+w==}
+    peerDependencies:
+      astro: ^3.6.0
+    dependencies:
+      astro: 3.6.0(typescript@5.3.2)
+    dev: false
 
   /simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}

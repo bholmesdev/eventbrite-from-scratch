@@ -32,9 +32,9 @@ INSERT INTO
     )
 VALUES
     (
-        'Event 1',
-        'Description 1',
-        '2020-01-01',
+        'Sampha LIVE in Brooklyn',
+        'Sampha is on tour with his new, flawless album Lahai. Come see the live performance outdoors in Prospect Park. Yes, there will be a grand piano 🎹',
+        '2024-01-01',
         10000,
-        'Location 1'
+        'Brooklyn, NY'
     );

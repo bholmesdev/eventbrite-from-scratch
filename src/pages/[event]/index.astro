@@ -1,0 +1,121 @@
+---
+import QuantityPrice from "../../components/Price";
+import Layout from "../../layouts/Layout.astro";
+import { z } from "astro/zod";
+
+const event = await Astro.locals.runtime.env.DB.prepare(
+  "SELECT * FROM events WHERE id = ?"
+)
+  .bind(Astro.params.event)
+  .first();
+
+if (!event) return Astro.redirect("/404");
+
+const ticketForm = await Astro.locals.form.getData({
+  email: z.string().email(),
+  quantity: z.number(),
+});
+
+if (ticketForm?.success) {
+  await Astro.locals.runtime.env.DB.prepare(
+    "INSERT INTO tickets (event_id, email, quantity) VALUES (?, ?, ?)"
+  )
+    .bind(Astro.params.event, ticketForm.data.email, ticketForm.data.quantity)
+    .run();
+}
+
+const ticket = await Astro.locals.runtime.env.DB.prepare(
+  "SELECT * FROM tickets WHERE event_id = ?"
+)
+  .bind(Astro.params.event)
+  .first();
+---
+
+<Layout title="Welcome to Astro.">
+  <main>
+    <h1>{event.name}</h1>
+    <p>
+      {event.description}
+    </p>
+
+    <form method="POST">
+      <QuantityPrice
+        transition:persist
+        client:load
+        price={event.ticket_price as number}
+      />
+      {
+        !ticketForm?.success &&
+          ticketForm?.error.formErrors.fieldErrors.quantity && (
+            <p class="error">
+              {ticketForm.error.formErrors.fieldErrors.quantity.join("")}
+            </p>
+          )
+      }
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" />
+      {
+        !ticketForm?.success &&
+          ticketForm?.error.formErrors.fieldErrors.email && (
+            <p class="error">
+              {ticketForm.error.formErrors.fieldErrors.email.join("")}
+            </p>
+          )
+      }
+
+      <button>Buy tickets</button>
+    </form>
+
+    {
+      ticket && (
+        <section class="youre-going">
+          <h2>You're going</h2>
+          <p>
+            You have purchased {ticket.quantity} tickets for {event.name}
+          </p>
+        </section>
+      )
+    }
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--size-4);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-2);
+    margin-bottom: var(--size-4);
+    background: var(--surface-1);
+    padding: var(--size-2);
+    border-radius: var(--radius-2);
+  }
+
+  .error {
+    color: var(--red-6);
+    margin-bottom: var(--size-2);
+    grid-column: 1 / -1;
+  }
+
+  form button {
+    grid-column: 1 / -1;
+    background: var(--orange-8);
+    border-radius: var(--radius-2);
+  }
+
+  .youre-going {
+    background: var(--surface-1);
+    padding: var(--size-2);
+  }
+
+  h2 {
+    font-size: var(--font-size-4);
+    margin-bottom: var(--size-2);
+  }
+</style>

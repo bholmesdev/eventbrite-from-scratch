@@ -24,8 +24,8 @@ dependencies:
     specifier: ^10.6.5
     version: 10.19.2
   simple-stack-form:
-    specifier: ^0.0.1
-    version: 0.0.1(astro@3.6.0)
+    specifier: ^0.0.3
+    version: 0.0.3(astro@3.6.0)
   typescript:
     specifier: ^5.3.2
     version: 5.3.2
@@ -3630,8 +3630,8 @@ packages:
     dev: false
     optional: true
 
-  /simple-stack-form@0.0.1(astro@3.6.0):
-    resolution: {integrity: sha512-F23vNocZmrlvQ2e83vo4is7E13kPYWM1exG/VDkJdzTsQq3qdZcqb0jRD1gcjhRiHAXuiE27VG8caXRYmgnw+w==}
+  /simple-stack-form@0.0.3(astro@3.6.0):
+    resolution: {integrity: sha512-fl9zEvwwtFbhm/lkJnnJPd4lEpG2ORuYQFp7kcFIcHp/UhSS59jdmHiNOU2FlZHGApwP7KywGhhBgOxLSg0d9Q==}
     peerDependencies:
       astro: ^3.6.0
     dependencies:

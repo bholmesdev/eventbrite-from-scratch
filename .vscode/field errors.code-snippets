@@ -1,0 +1,10 @@
+{
+  "field errors": {
+    "scope": "",
+    "prefix": "errors",
+    "body": [
+      "!ticketForm?.success && ticketForm?.error.formErrors.fieldErrors."
+    ],
+    "description": ""
+  }
+}

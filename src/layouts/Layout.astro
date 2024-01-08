@@ -8,6 +8,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+const errors = ["one", "two"];
 ---
 
 <!doctype html>
@@ -22,6 +24,13 @@ const { title } = Astro.props;
     <ViewTransitions handleForms />
   </head>
   <body>
+    {
+      errors.map((e) => (
+        <noscript>
+          <p>{e && e}</p>
+        </noscript>
+      ))
+    }
     <slot />
   </body>
 </html>

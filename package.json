@@ -14,11 +14,17 @@
     "@astrojs/check": "^0.3.1",
     "@astrojs/cloudflare": "^7.7.1",
     "@astrojs/preact": "^3.0.1",
-    "astro": "^3.6.0",
+    "@astrojs/react": "^3.0.7",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^4.0.3",
     "open-props": "^1.6.13",
     "preact": "^10.6.5",
-    "simple-stack-form": "^0.0.3",
-    "typescript": "^5.3.2"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "simple-stack-form": "^0.1.0",
+    "typescript": "^5.3.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231121.0"

@@ -1,7 +1,6 @@
 ---
-import QuantityPrice from "../../components/Price";
 import Layout from "../../layouts/Layout.astro";
-import { z } from "astro/zod";
+import TicketForm, { ticketForm } from "./_TicketForm";
 
 const event = await Astro.locals.runtime.env.DB.prepare(
   "SELECT * FROM events WHERE id = ?"
@@ -11,16 +10,13 @@ const event = await Astro.locals.runtime.env.DB.prepare(
 
 if (!event) return Astro.redirect("/404");
 
-const ticketForm = await Astro.locals.form.getData({
-  email: z.string().email(),
-  quantity: z.number(),
-});
+const result = await Astro.locals.form.getData(ticketForm);
 
-if (ticketForm?.success) {
+if (result?.data) {
   await Astro.locals.runtime.env.DB.prepare(
     "INSERT INTO tickets (event_id, email, quantity) VALUES (?, ?, ?)"
   )
-    .bind(Astro.params.event, ticketForm.data.email, ticketForm.data.quantity)
+    .bind(Astro.params.event, result.data.email, result.data.quantity)
     .run();
 }
 
@@ -37,35 +33,7 @@ const ticket = await Astro.locals.runtime.env.DB.prepare(
     <p>
       {event.description}
     </p>
-
-    <form method="POST">
-      <QuantityPrice
-        transition:persist
-        client:load
-        price={event.ticket_price as number}
-      />
-      {
-        !ticketForm?.success &&
-          ticketForm?.error.formErrors.fieldErrors.quantity && (
-            <p class="error">
-              {ticketForm.error.formErrors.fieldErrors.quantity.join("")}
-            </p>
-          )
-      }
-
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" />
-      {
-        !ticketForm?.success &&
-          ticketForm?.error.formErrors.fieldErrors.email && (
-            <p class="error">
-              {ticketForm.error.formErrors.fieldErrors.email.join("")}
-            </p>
-          )
-      }
-
-      <button>Buy tickets</button>
-    </form>
+    <TicketForm client:load />
 
     {
       ticket && (

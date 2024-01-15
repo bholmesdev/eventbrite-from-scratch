@@ -17,6 +17,7 @@ CREATE TABLE `tickets` (
     `event_id` INTEGER NOT NULL,
     `email` TEXT NOT NULL,
     `quantity` INTEGER NOT NULL,
+    `newsletter` INTEGER NOT NULL DEFAULT 0,
     `created_at` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(`event_id`) REFERENCES `events`(`id`)

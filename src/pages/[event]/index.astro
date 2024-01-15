@@ -1,13 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { z } from "astro/zod";
-import { createForm } from "simple:form";
-
-const ticketForm = createForm({
-  email: z.string().email(),
-  quantity: z.number(),
-  newsletter: z.boolean(),
-});
+import { TicketForm, ticketForm } from "./_Ticket";
 
 const event = await Astro.locals.runtime.env.DB.prepare(
   "SELECT * FROM events WHERE id = ?"
@@ -20,6 +13,7 @@ if (!event) return Astro.redirect("/404");
 const res = await Astro.locals.form.getData(ticketForm);
 
 if (res?.data) {
+  console.log(res.data);
   await Astro.locals.runtime.env.DB.prepare(
     "INSERT INTO tickets (event_id, email, quantity, newsletter) VALUES (?, ?, ?, ?)"
   )
@@ -46,35 +40,7 @@ const ticket = await Astro.locals.runtime.env.DB.prepare(
       {event.description}
     </p>
 
-    <form method="POST">
-      <label for="quantity">Quantity</label>
-      <input id="quantity" {...ticketForm.inputProps.quantity} />
-      {
-        res?.fieldErrors?.quantity && (
-          <p class="error">{res.fieldErrors.quantity.join("")}</p>
-        )
-      }
-
-      <label for="email">Email</label>
-      <input id="email" {...ticketForm.inputProps.email} />
-      {
-        res?.fieldErrors?.email && (
-          <p class="error">{res.fieldErrors.email.join("")}</p>
-        )
-      }
-
-      <div class="newsletter">
-        <input id="newsletter" {...ticketForm.inputProps.newsletter} />
-        <label for="newsletter">Hear about the next event in your area</label>
-        {
-          res?.fieldErrors?.newsletter && (
-            <p class="error">{res.fieldErrors.newsletter.join("")}</p>
-          )
-        }
-      </div>
-      <button>Buy tickets</button>
-    </form>
-
+    <TicketForm client:load />
     {
       ticket && (
         <section class="youre-going">
@@ -90,52 +56,3 @@ const ticket = await Astro.locals.runtime.env.DB.prepare(
     }
   </main>
 </Layout>
-
-<style>
-  main {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: var(--size-4);
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-2);
-    margin-bottom: var(--size-4);
-    background: var(--surface-2);
-    padding: var(--size-2);
-    border-radius: var(--radius-2);
-  }
-
-  .error {
-    color: var(--red-6);
-    margin-bottom: var(--size-2);
-    grid-column: 1 / -1;
-  }
-
-  form button {
-    grid-column: 1 / -1;
-    background: var(--orange-8);
-    border-radius: var(--radius-2);
-  }
-
-  .youre-going {
-    background: var(--surface-2);
-    padding: var(--size-2);
-    border-radius: var(--radius-2);
-    display: flex;
-    flex-direction: column;
-  }
-
-  h2 {
-    font-size: var(--font-size-4);
-    margin-bottom: var(--size-2);
-  }
-
-  .newsletter {
-    display: flex;
-    align-items: center;
-    gap: var(--size-2);
-  }
-</style>

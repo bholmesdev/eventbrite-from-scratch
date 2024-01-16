@@ -40,7 +40,7 @@ const ticket = await Astro.locals.runtime.env.DB.prepare(
       {event.description}
     </p>
 
-    <TicketForm client:load />
+    <TicketForm price={event.ticket_price as number} client:load />
     {
       ticket && (
         <section class="youre-going">

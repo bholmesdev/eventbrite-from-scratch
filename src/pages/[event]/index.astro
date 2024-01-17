@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { TicketForm, ticketForm } from "./_Ticket";
 
 const event = await Astro.locals.runtime.env.DB.prepare(
   "SELECT * FROM events WHERE id = ?"
@@ -9,28 +8,6 @@ const event = await Astro.locals.runtime.env.DB.prepare(
   .first();
 
 if (!event) return Astro.redirect("/404");
-
-const res = await Astro.locals.form.getData(ticketForm);
-
-if (res?.data) {
-  console.log(res.data);
-  await Astro.locals.runtime.env.DB.prepare(
-    "INSERT INTO tickets (event_id, email, quantity, newsletter) VALUES (?, ?, ?, ?)"
-  )
-    .bind(
-      Astro.params.event,
-      res.data.email,
-      res.data.quantity,
-      +res.data.newsletter
-    )
-    .run();
-}
-
-const ticket = await Astro.locals.runtime.env.DB.prepare(
-  "SELECT * FROM tickets WHERE event_id = ?"
-)
-  .bind(Astro.params.event)
-  .first();
 ---
 
 <Layout title="Welcome to Astro.">
@@ -39,20 +16,5 @@ const ticket = await Astro.locals.runtime.env.DB.prepare(
     <p>
       {event.description}
     </p>
-
-    <TicketForm price={event.ticket_price as number} client:load />
-    {
-      ticket && (
-        <section class="youre-going">
-          <h2>You're going 🙌</h2>
-          <p>
-            You have purchased {ticket.quantity} tickets for {event.name}!
-          </p>
-          <p>
-            Check <strong>{ticket.email}</strong> for your tickets.
-          </p>
-        </section>
-      )
-    }
   </main>
 </Layout>

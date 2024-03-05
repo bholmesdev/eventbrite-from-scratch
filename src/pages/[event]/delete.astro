@@ -1,0 +1,22 @@
+---
+await db.delete(Event).where({ id: Astro.params.event });
+---
+
+<simple-toast data-message={`Event ${Astro.params.event} deleted.`}>
+</simple-toast>
+
+<script>
+  @controller
+  class SimpleToastElement extends HTMLElement {
+    @attr message = "";
+    @attr duration = 3000;
+
+    async connectedCallback() {
+      await Toastify({
+        text: message,
+        duration,
+      }).showToast();
+      this.remove();
+    }
+  }
+</script>

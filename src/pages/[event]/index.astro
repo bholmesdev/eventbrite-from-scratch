@@ -24,61 +24,61 @@ if (ticketForm?.success) {
     .run();
 }
 
-const ticket = await Astro.locals.runtime.env.DB.prepare(
-  "SELECT * FROM tickets WHERE event_id = ?"
-)
-  .bind(Astro.params.event)
-  .first();
+const Tag = tag();
+
+export const error = scope("error");
+export const success = scope("success");
 ---
 
 <Layout title="Welcome to Astro.">
-  <main>
-    <h1>{event.name}</h1>
-    <p>
-      {event.description}
-    </p>
+  <Tag class="test">
+    <main>
+      <h1>{event.name}</h1>
+      <p>
+        {event.description}
+      </p>
 
-    <form method="POST">
-      <QuantityPrice
-        transition:persist
-        client:load
-        price={event.ticket_price as number}
-      />
-      {
-        !ticketForm?.success &&
-          ticketForm?.error.formErrors.fieldErrors.quantity && (
-            <p class="error">
-              {ticketForm.error.formErrors.fieldErrors.quantity.join("")}
-            </p>
-          )
-      }
+      <div class="error" data-target={target(Tag, "error")}></div>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" />
-      {
-        !ticketForm?.success &&
-          ticketForm?.error.formErrors.fieldErrors.email && (
-            <p class="error">
-              {ticketForm.error.formErrors.fieldErrors.email.join("")}
-            </p>
-          )
-      }
+      <form onsubmit={call(Tag, "handleSubmit")}>
+        <QuantityPrice client:load price={event.ticket_price as number} />
 
-      <button>Buy tickets</button>
-    </form>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" />
 
-    {
-      ticket && (
-        <section class="youre-going">
-          <h2>You're going</h2>
-          <p>
-            You have purchased {ticket.quantity} tickets for {event.name}
-          </p>
-        </section>
-      )
-    }
-  </main>
+        <button>Buy tickets</button>
+
+        <button onclick={call(Tag, "handleDelete")}></button>
+      </form>
+      <div class="youre-going" data-target={target(Tag, "success")}></div>
+    </main>
+  </Tag>
 </Layout>
+
+<script>
+  import { tag, target, controller } from "simple:web";
+  import { html } from "simple:html";
+
+  @controller(tag())
+  class El extends HTMLElement {
+    @target error: HTMLElement;
+    @target success: HTMLElement;
+    handleSubmit() {
+      const { body, ok } = html.post("/[event]/purchase");
+      if (!ok) return (this.error.innerHTML = body);
+      this.success.innerHTML = body;
+    }
+    handleDelete() {
+      const { ok } = html.delete("/[event]/delete");
+      if (ok) {
+        Toastify({
+          text: message,
+          duration,
+        }).showToast();
+      }
+    }
+  }
+</script>
 
 <style>
   main {

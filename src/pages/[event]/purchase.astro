@@ -1,0 +1,38 @@
+---
+import { z } from "zod";
+import { error, success } from "./index.astro";
+
+const id = Astro.params.event;
+
+const ticket = await Astro.locals.form.getData({
+  email: z.string().email(),
+  quantity: z.number(),
+});
+
+if (ticket?.success) {
+  await Astro.locals.runtime.env.DB.prepare(
+    "INSERT INTO tickets (event_id, email, quantity) VALUES (?, ?, ?)"
+  )
+    .bind(Astro.params.event, ticketForm.data.email, ticketForm.data.quantity)
+    .run();
+} else {
+  Astro.response.status = 400;
+}
+
+const event = await db.select({ name: Event.name }).from(Event).where({ id });
+---
+
+{
+  ticket?.success ? (
+    <template sh-slot={success}>
+      <h2>You're going!</h2>
+      <p>
+        You have purchased {ticket.data.quantity} tickets for {event.name}
+      </p>
+    </template>
+  ) : (
+    <template sh-slot={error}>
+      <p>Failed to purchase ticket.</p>
+    </template>
+  )
+}
